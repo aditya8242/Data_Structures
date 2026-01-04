@@ -188,6 +188,7 @@ void InsertAtPos(PPNODE first, int no, int pos)
 
 		newn->next = temp->next;
 		temp->next->prev = newn;
+		
 		temp->next = newn;
 		newn->prev = temp;
 	}
