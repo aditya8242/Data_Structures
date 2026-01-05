@@ -1,92 +1,110 @@
 #include<iostream>
-#include<string>
 using namespace std;
 
-template <typename T>
 struct node
 {
-	T data;
-	struct node<T> *next;
+	int data;
+	struct node *next;
+	struct node *prev;
 };
 
-template <class T>
-class SinglyLL
+typedef struct node NODE;
+typedef struct node * PNODE;
+
+class DoublyCL
 {
 	private:	// IMPORTANT
-		node<T>* first;
+		PNODE first;
+		PNODE last;
 		int iCount;
 
 	public:
-		SinglyLL()
+		DoublyCL()
 		{
-			cout<<"Object of SinglyLL gets created.\n";
+			cout<<"Object of DoublyCL gets created.\n";
 			this->first = NULL;
+			this->last = NULL;
 			this->iCount = 0;
 		}
 
-		void InsertFirst(T no)
+		void InsertFirst(int no)
 		{
-			node<T>* newn = NULL;
+			PNODE newn = NULL;
 			
-			newn = new node<T>;
+			newn = new NODE;
 
 			newn->data = no;
 			newn->next = NULL;
+			newn->prev = NULL;
 
-			newn->next = this->first;		// code reduction
-			this->first = newn;			// not optimization
+			if(this->first == NULL) // can use iCount
+			{
+				this->first = newn;
+				this->last = newn;
+			}
+			else
+			{
+				newn->next = this->first;
+				this->first->prev = newn;
+				this->first = newn;
+			}
+
+			this->last->next = first;
+			this->first->prev = last;
 
 			this->iCount++;
 		}
 
-		void InsertLast(T no)
+		void InsertLast(int no)
 		{
-			node<T>* newn = NULL;
-			node<T>* temp = NULL;
+			PNODE newn = NULL;
 			
-			newn = new node<T>;
+			newn = new NODE;
 
 			newn->data = no;
 			newn->next = NULL;
+			newn->prev = NULL;
 
-			if(this->iCount == 0)	// updated
+			if(this->iCount == 0)
 			{
 				this->first = newn;
+				this->last = newn;
 			}
 			else
 			{
-				temp = this->first;
-
-				while(temp->next != NULL)
-				{
-					temp = temp->next;
-				}
-
-				temp->next = newn;
+				this->last->next = newn;
+				newn->prev = last;
+				last = newn;
 			}
+
+			this->last->next = first;
+			this->first->prev = last;
 
 			this->iCount++;
 		}
 
 		void DeleteFirst()
 		{
-			node<T>* temp = NULL;
+			PNODE temp = NULL;
 
-			if(this->first == NULL)
+			if(this->first == NULL && this->last == NULL)
 			{
 				return;
 			}
-			else if(this->first->next == NULL)	// this->iCount == 1
+			else if(this->iCount == 1)
 			{
 				delete this->first;
+
 				this->first = NULL;
+				this->last = NULL;
 			}
 			else
 			{
-				temp = this->first;
-
 				this->first = this->first->next;
-				delete temp;
+				delete this->first->prev;
+
+				this->last->next = first;
+				this->first->prev = last;
 			}
 
 			this->iCount--;	// important
@@ -94,28 +112,26 @@ class SinglyLL
 
 		void DeleteLast()
 		{
-			node<T>* temp = NULL;
+			PNODE temp = NULL;
 
-			if(this->first == NULL)
+			if(this->first == NULL && this->last == NULL)
 			{
 				return;
 			}
-			else if(this->first->next == NULL)	// iCount == 1
+			else if(this->iCount == 1)
 			{
 				delete this->first;
+
 				this->first = NULL;
+				this->last = NULL;
 			}
 			else
 			{
-				temp = this->first;
+				this->last = this->last->prev;
+				delete this->last->next;
 
-				while(temp->next->next != NULL)
-				{
-					temp = temp->next;
-				}
-
-				delete temp->next;
-				temp->next = NULL;
+				this->last->next = first;
+				this->first->prev = last;
 			}
 
 			this->iCount--;	// important
@@ -123,19 +139,15 @@ class SinglyLL
 
 		void Display()
 		{
-			node<T>* temp = NULL;
-			int iCnt = 0;
+			PNODE temp = NULL;
 
 			temp = this->first;
 
-			// updated
-			for(iCnt = 1; iCnt <= this->iCount; iCnt++)	// 3
+			do
 			{
-				cout << "| " << temp->data << " |->";
-				temp = temp->next;	// can put it in for 3
-			}
-
-			cout << "NULL\n";
+				cout << "| " << temp->data << " |<=>";
+				temp = temp->next;
+			}while(temp != last->next);
 		}
 
 		int Count()
@@ -145,8 +157,8 @@ class SinglyLL
 
 		void InsertAtPos(int no, int pos)
 		{
-			node<T>* newn = NULL;
-			node<T>* temp = NULL;
+			PNODE newn = NULL;
+			PNODE temp = NULL;
 
 			int iCnt = 0;
 
@@ -166,9 +178,11 @@ class SinglyLL
 			}
 			else
 			{
-				newn = new node<T>;
+				newn = new NODE;
+
 				newn->data = no;
 				newn->next = NULL;
+				newn->prev = NULL;
 
 				temp = this->first;
 
@@ -178,7 +192,10 @@ class SinglyLL
 				}
 
 				newn->next = temp->next;
+				temp->next->prev = newn;
+
 				temp->next = newn;
+				newn->prev = temp;
 
 				this->iCount++;
 			}
@@ -186,8 +203,8 @@ class SinglyLL
 
 		void DeleteAtPos(int pos)
 		{
-			node<T>* temp = NULL;
-			node<T>* target = NULL;
+			PNODE temp = NULL;
+			PNODE target = NULL;
 
 			int iCnt = 0;
 
@@ -216,8 +233,9 @@ class SinglyLL
 				}
 
 				target = temp->next;
+
 				temp->next = target->next;
-				
+				temp->next->prev = temp;
 				delete target;
 
 				this->iCount--;	// important
@@ -227,7 +245,7 @@ class SinglyLL
 
 int main()
 {
-	SinglyLL<int> obj;
+	DoublyCL obj;
 	int iRet = 0;
 
 	obj.InsertFirst(51);

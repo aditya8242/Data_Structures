@@ -148,7 +148,7 @@ void InsertAtPos(PPNODE first, PPNODE last, int no, int pos)
 
 	int iCnt = 0;
 
-	if(pos < 1 || pos > iSize+1)
+	if(pos < 0 || pos > iSize+1)
 	{
 		printf("Invalid position.\n");
 		return;

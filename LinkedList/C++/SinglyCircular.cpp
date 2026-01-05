@@ -10,17 +10,19 @@ struct node
 typedef struct node NODE;
 typedef struct node * PNODE;
 
-class SinglyLL
+class SinglyCL
 {
 	private:	// IMPORTANT
 		PNODE first;
+		PNODE last;
 		int iCount;
 
 	public:
-		SinglyLL()
+		SinglyCL()
 		{
-			cout<<"Object of SinglyLL gets created.\n";
+			cout<<"Object of SinglyCL gets created.\n";
 			this->first = NULL;
+			this->last = NULL;
 			this->iCount = 0;
 		}
 
@@ -33,8 +35,18 @@ class SinglyLL
 			newn->data = no;
 			newn->next = NULL;
 
-			newn->next = this->first;		// code reduction
-			this->first = newn;			// not optimization
+			if(NULL == this->first && NULL == this->last)
+			{
+				this->first = newn;
+				this->last = newn;
+			}
+			else
+			{
+				newn->next = this->first;
+				first = newn;
+			}
+
+			this->last->next = first;
 
 			this->iCount++;
 		}
@@ -49,21 +61,18 @@ class SinglyLL
 			newn->data = no;
 			newn->next = NULL;
 
-			if(this->iCount == 0)	// updated
+			if(this->iCount == 0)
 			{
 				this->first = newn;
+				this->last = newn;
 			}
 			else
 			{
-				temp = this->first;
-
-				while(temp->next != NULL)
-				{
-					temp = temp->next;
-				}
-
-				temp->next = newn;
+				this->last->next = newn;
+				this->last = newn;
 			}
+
+			this->last->next = first;
 
 			this->iCount++;
 		}
@@ -72,14 +81,16 @@ class SinglyLL
 		{
 			PNODE temp = NULL;
 
-			if(this->first == NULL)
+			if(this->first == NULL && this->last == NULL)
 			{
 				return;
 			}
-			else if(this->first->next == NULL)	// this->iCount == 1
+			else if(this->iCount == 1)	// this->iCount == 1
 			{
 				delete this->first;
+
 				this->first = NULL;
+				this->last = NULL;
 			}
 			else
 			{
@@ -87,6 +98,8 @@ class SinglyLL
 
 				this->first = this->first->next;
 				delete temp;
+				
+				this->last->next = first;
 			}
 
 			this->iCount--;	// important
@@ -96,26 +109,30 @@ class SinglyLL
 		{
 			PNODE temp = NULL;
 
-			if(this->first == NULL)
+			if(this->first == NULL && this->last == NULL)
 			{
 				return;
 			}
-			else if(this->first->next == NULL)	// iCount == 1
+			else if(iCount == 1)	// iCount == 1
 			{
 				delete this->first;
+
 				this->first = NULL;
+				this->last = NULL;
 			}
 			else
 			{
 				temp = this->first;
 
-				while(temp->next->next != NULL)
+				while(temp->next != this->last)
 				{
 					temp = temp->next;
 				}
 
-				delete temp->next;
-				temp->next = NULL;
+				delete this->last;
+				this->last = temp;
+
+				this->last->next = first;
 			}
 
 			this->iCount--;	// important
@@ -124,18 +141,14 @@ class SinglyLL
 		void Display()
 		{
 			PNODE temp = NULL;
-			int iCnt = 0;
 
 			temp = this->first;
 
-			// updated
-			for(iCnt = 1; iCnt <= this->iCount; iCnt++)	// 3
+			do
 			{
 				cout << "| " << temp->data << " |->";
-				temp = temp->next;	// can put it in for 3
-			}
-
-			cout << "NULL\n";
+				temp = temp->next;
+			}while(temp != this->last->next);
 		}
 
 		int Count()
@@ -216,8 +229,8 @@ class SinglyLL
 				}
 
 				target = temp->next;
-				temp->next = target->next;
 				
+				temp->next = target->next;
 				delete target;
 
 				this->iCount--;	// important
@@ -227,7 +240,7 @@ class SinglyLL
 
 int main()
 {
-	SinglyLL obj;
+	SinglyCL obj;
 	int iRet = 0;
 
 	obj.InsertFirst(51);
