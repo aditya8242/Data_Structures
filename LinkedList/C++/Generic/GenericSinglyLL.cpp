@@ -13,217 +13,235 @@ template <class T>
 class SinglyLL
 {
 	private:	// IMPORTANT
-		node<T>* first;
+		struct node<T>* first;
 		int iCount;
 
 	public:
-		SinglyLL()
-		{
-			cout<<"Object of SinglyLL gets created.\n";
-			this->first = NULL;
-			this->iCount = 0;
-		}
-
-		void InsertFirst(T no)
-		{
-			node<T>* newn = NULL;
-			
-			newn = new node<T>;
-
-			newn->data = no;
-			newn->next = NULL;
-
-			newn->next = this->first;		// code reduction
-			this->first = newn;			// not optimization
-
-			this->iCount++;
-		}
-
-		void InsertLast(T no)
-		{
-			node<T>* newn = NULL;
-			node<T>* temp = NULL;
-			
-			newn = new node<T>;
-
-			newn->data = no;
-			newn->next = NULL;
-
-			if(this->iCount == 0)	// updated
-			{
-				this->first = newn;
-			}
-			else
-			{
-				temp = this->first;
-
-				while(temp->next != NULL)
-				{
-					temp = temp->next;
-				}
-
-				temp->next = newn;
-			}
-
-			this->iCount++;
-		}
-
-		void DeleteFirst()
-		{
-			node<T>* temp = NULL;
-
-			if(this->first == NULL)
-			{
-				return;
-			}
-			else if(this->first->next == NULL)	// this->iCount == 1
-			{
-				delete this->first;
-				this->first = NULL;
-			}
-			else
-			{
-				temp = this->first;
-
-				this->first = this->first->next;
-				delete temp;
-			}
-
-			this->iCount--;	// important
-		}
-
-		void DeleteLast()
-		{
-			node<T>* temp = NULL;
-
-			if(this->first == NULL)
-			{
-				return;
-			}
-			else if(this->first->next == NULL)	// iCount == 1
-			{
-				delete this->first;
-				this->first = NULL;
-			}
-			else
-			{
-				temp = this->first;
-
-				while(temp->next->next != NULL)
-				{
-					temp = temp->next;
-				}
-
-				delete temp->next;
-				temp->next = NULL;
-			}
-
-			this->iCount--;	// important
-		}
-
-		void Display()
-		{
-			node<T>* temp = NULL;
-			int iCnt = 0;
-
-			temp = this->first;
-
-			// updated
-			for(iCnt = 1; iCnt <= this->iCount; iCnt++)	// 3
-			{
-				cout << "| " << temp->data << " |->";
-				temp = temp->next;	// can put it in for 3
-			}
-
-			cout << "NULL\n";
-		}
-
-		int Count()
-		{
-			return this->iCount;
-		}
-
-		void InsertAtPos(int no, int pos)
-		{
-			node<T>* newn = NULL;
-			node<T>* temp = NULL;
-
-			int iCnt = 0;
-
-			if(pos < 0 || pos > this->iCount+1)
-			{
-				cout<<"Invalid position\n";
-				return;
-			}
-			
-			if(pos == 1)
-			{
-				this->InsertFirst(no);	// this before function
-			}
-			else if(pos == this->iCount+1)
-			{
-				this->InsertLast(no);
-			}
-			else
-			{
-				newn = new node<T>;
-				newn->data = no;
-				newn->next = NULL;
-
-				temp = this->first;
-
-				for(iCnt = 1; iCnt < pos - 1; iCnt++)
-				{
-					temp = temp->next;
-				}
-
-				newn->next = temp->next;
-				temp->next = newn;
-
-				this->iCount++;
-			}
-		}
-
-		void DeleteAtPos(int pos)
-		{
-			node<T>* temp = NULL;
-			node<T>* target = NULL;
-
-			int iCnt = 0;
-
-			if(pos < 0 || pos > this->iCount)
-			{
-				cout<<"Invalid position";
-				return;
-			}
-
-			if(pos == 1)
-			{
-				this->DeleteFirst();
-			}
-			else if(pos == this->iCount)
-			{
-				this->DeleteLast();
-			}
-			else
-			{
-				temp = this->first;
-
-
-				for(iCnt = 1; iCnt < pos - 1; iCnt++)
-				{
-					temp = temp->next;
-				}
-
-				target = temp->next;
-				temp->next = target->next;
-				
-				delete target;
-
-				this->iCount--;	// important
-			}
-		}
+		SinglyLL();
+		void InsertFirst(T no);
+		void InsertLast(T no);
+		void DeleteFirst();
+		void DeleteLast();
+		void Display();
+		int Count();
+		void InsertAtPos(T no, int pos);
+		void DeleteAtPos(int pos);
 };
+
+template <class T>
+SinglyLL<T>::SinglyLL()
+{
+	cout<<"Object of SinglyLL gets created.\n";
+	this->first = NULL;
+	this->iCount = 0;
+}
+
+template <class T>
+void SinglyLL<T>::InsertFirst(T no)
+{
+	struct node<T>* newn = NULL;
+	
+	newn = new struct node<T>;
+
+	newn->data = no;
+	newn->next = NULL;
+
+	newn->next = this->first;		// code reduction
+	this->first = newn;			// not optimization
+
+	this->iCount++;
+}
+
+template <class T>
+void SinglyLL<T>::InsertLast(T no)
+{
+	node<T>* newn = NULL;
+	node<T>* temp = NULL;
+	
+	newn = new node<T>;
+
+	newn->data = no;
+	newn->next = NULL;
+
+	if(this->iCount == 0)	// updated
+	{
+		this->first = newn;
+	}
+	else
+	{
+		temp = this->first;
+
+		while(temp->next != NULL)
+		{
+			temp = temp->next;
+		}
+
+		temp->next = newn;
+	}
+
+	this->iCount++;
+}
+
+template <class T>
+void SinglyLL<T>::DeleteFirst()
+{
+	node<T>* temp = NULL;
+
+	if(this->first == NULL)
+	{
+		return;
+	}
+	else if(this->first->next == NULL)	// this->iCount == 1
+	{
+		delete this->first;
+		this->first = NULL;
+	}
+	else
+	{
+		temp = this->first;
+
+		this->first = this->first->next;
+		delete temp;
+	}
+
+	this->iCount--;	// important
+}
+
+template <class T>
+void SinglyLL<T>::DeleteLast()
+{
+	node<T>* temp = NULL;
+
+	if(this->first == NULL)
+	{
+		return;
+	}
+	else if(this->first->next == NULL)	// iCount == 1
+	{
+		delete this->first;
+		this->first = NULL;
+	}
+	else
+	{
+		temp = this->first;
+
+		while(temp->next->next != NULL)
+		{
+			temp = temp->next;
+		}
+
+		delete temp->next;
+		temp->next = NULL;
+	}
+
+	this->iCount--;	// important
+}
+
+template <class T>
+void SinglyLL<T>::Display()
+{
+	node<T>* temp = NULL;
+	int iCnt = 0;
+
+	temp = this->first;
+
+	// updated
+	for(iCnt = 1; iCnt <= this->iCount; iCnt++)	// 3
+	{
+		cout << "| " << temp->data << " |->";
+		temp = temp->next;	// can put it in for 3
+	}
+
+	cout << "NULL\n";
+}
+
+template <class T>
+int SinglyLL<T>::Count()
+{
+	return this->iCount;
+}
+
+template <class T>
+void SinglyLL<T>::InsertAtPos(T no, int pos)
+{
+	node<T>* newn = NULL;
+	node<T>* temp = NULL;
+
+	int iCnt = 0;
+
+	if(pos < 0 || pos > this->iCount+1)
+	{
+		cout<<"Invalid position\n";
+		return;
+	}
+	
+	if(pos == 1)
+	{
+		this->InsertFirst(no);	// this before function
+	}
+	else if(pos == this->iCount+1)
+	{
+		this->InsertLast(no);
+	}
+	else
+	{
+		newn = new node<T>;
+		newn->data = no;
+		newn->next = NULL;
+
+		temp = this->first;
+
+		for(iCnt = 1; iCnt < pos - 1; iCnt++)
+		{
+			temp = temp->next;
+		}
+
+		newn->next = temp->next;
+		temp->next = newn;
+
+		this->iCount++;
+	}
+}
+
+template <class T>
+void SinglyLL<T>::DeleteAtPos(int pos)
+{
+	node<T>* temp = NULL;
+	node<T>* target = NULL;
+
+	int iCnt = 0;
+
+	if(pos < 0 || pos > this->iCount)
+	{
+		cout<<"Invalid position";
+		return;
+	}
+
+	if(pos == 1)
+	{
+		this->DeleteFirst();
+	}
+	else if(pos == this->iCount)
+	{
+		this->DeleteLast();
+	}
+	else
+	{
+		temp = this->first;
+
+		for(iCnt = 1; iCnt < pos - 1; iCnt++)
+		{
+			temp = temp->next;
+		}
+
+		target = temp->next;
+		temp->next = target->next;
+		
+		delete target;
+
+		this->iCount--;	// important
+	}
+}
 
 int main()
 {
