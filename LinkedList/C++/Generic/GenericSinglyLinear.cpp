@@ -1,35 +1,47 @@
+///////////////////////////////////////////////////////////////////
+//	final code of singly linear linked list using generic approach
+///////////////////////////////////////////////////////////////////
+
 #include<iostream>
-#include<string>
 using namespace std;
 
-template <typename T>
-struct node
+#pragma pack(1)
+
+template <class T>
+class SinglyLLLnode
 {
-	T data;
-	struct node<T> *next;
+	public:
+		T data;
+		SinglyLLLnode<T> *next;
+
+		SinglyLLLnode(T no)
+		{
+			this->data = no;
+			this->next = NULL;
+		}
 };
 
 template <class T>
-class SinglyLL
+class SinglyLLL
 {
-	private:	// IMPORTANT
-		struct node<T>* first;
+	private:
+		SinglyLLLnode<T> * first;
 		int iCount;
 
 	public:
-		SinglyLL();
-		void InsertFirst(T no);
-		void InsertLast(T no);
+		SinglyLLL();
+		void InsertFirst(T);
+		void InsertLast(T);
 		void DeleteFirst();
 		void DeleteLast();
 		void Display();
 		int Count();
-		void InsertAtPos(T no, int pos);
-		void DeleteAtPos(int pos);
+		void InsertAtPos(T, int);
+		void DeleteAtPos(int);
 };
 
 template <class T>
-SinglyLL<T>::SinglyLL()
+SinglyLLL<T>::SinglyLLL()
 {
 	cout<<"Object of SinglyLL gets created.\n";
 	this->first = NULL;
@@ -37,33 +49,27 @@ SinglyLL<T>::SinglyLL()
 }
 
 template <class T>
-void SinglyLL<T>::InsertFirst(T no)
+void SinglyLLL<T>::InsertFirst(T no)
 {
-	struct node<T>* newn = NULL;
+	SinglyLLLnode<T> * newn = NULL;
 	
-	newn = new struct node<T>;
+	newn = new SinglyLLLnode<T>(no);
 
-	newn->data = no;
-	newn->next = NULL;
-
-	newn->next = this->first;		// code reduction
-	this->first = newn;			// not optimization
+	newn->next = this->first;
+	this->first = newn;
 
 	this->iCount++;
 }
 
 template <class T>
-void SinglyLL<T>::InsertLast(T no)
+void SinglyLLL<T>::InsertLast(T no)
 {
-	node<T>* newn = NULL;
-	node<T>* temp = NULL;
-	
-	newn = new node<T>;
+	SinglyLLLnode<T> * newn = NULL;
+	SinglyLLLnode<T> * temp = NULL;
 
-	newn->data = no;
-	newn->next = NULL;
+	newn = new SinglyLLLnode<T>(no);
 
-	if(this->iCount == 0)	// updated
+	if(this->iCount == 0)
 	{
 		this->first = newn;
 	}
@@ -83,15 +89,15 @@ void SinglyLL<T>::InsertLast(T no)
 }
 
 template <class T>
-void SinglyLL<T>::DeleteFirst()
+void SinglyLLL<T>::DeleteFirst()
 {
-	node<T>* temp = NULL;
+	SinglyLLLnode<T> * temp = NULL;
 
 	if(this->first == NULL)
 	{
 		return;
 	}
-	else if(this->first->next == NULL)	// this->iCount == 1
+	else if(this->first->next == NULL)
 	{
 		delete this->first;
 		this->first = NULL;
@@ -104,19 +110,19 @@ void SinglyLL<T>::DeleteFirst()
 		delete temp;
 	}
 
-	this->iCount--;	// important
+	this->iCount--;
 }
 
 template <class T>
-void SinglyLL<T>::DeleteLast()
+void SinglyLLL<T>::DeleteLast()
 {
-	node<T>* temp = NULL;
+	SinglyLLLnode<T> * temp = NULL;
 
 	if(this->first == NULL)
 	{
 		return;
 	}
-	else if(this->first->next == NULL)	// iCount == 1
+	else if(this->first->next == NULL)
 	{
 		delete this->first;
 		this->first = NULL;
@@ -134,38 +140,37 @@ void SinglyLL<T>::DeleteLast()
 		temp->next = NULL;
 	}
 
-	this->iCount--;	// important
+	this->iCount--;
 }
 
 template <class T>
-void SinglyLL<T>::Display()
+void SinglyLLL<T>::Display()
 {
-	node<T>* temp = NULL;
+	SinglyLLLnode<T> * temp = NULL;
 	int iCnt = 0;
 
 	temp = this->first;
 
-	// updated
-	for(iCnt = 1; iCnt <= this->iCount; iCnt++)	// 3
+	for(iCnt = 1; iCnt <= this->iCount; iCnt++)
 	{
 		cout << "| " << temp->data << " |->";
-		temp = temp->next;	// can put it in for 3
+		temp = temp->next;
 	}
 
 	cout << "NULL\n";
 }
 
 template <class T>
-int SinglyLL<T>::Count()
+int SinglyLLL<T>::Count()
 {
 	return this->iCount;
 }
 
 template <class T>
-void SinglyLL<T>::InsertAtPos(T no, int pos)
+void SinglyLLL<T>::InsertAtPos(T no, int pos)
 {
-	node<T>* newn = NULL;
-	node<T>* temp = NULL;
+	SinglyLLLnode<T> * newn = NULL;
+	SinglyLLLnode<T> * temp = NULL;
 
 	int iCnt = 0;
 
@@ -177,7 +182,7 @@ void SinglyLL<T>::InsertAtPos(T no, int pos)
 	
 	if(pos == 1)
 	{
-		this->InsertFirst(no);	// this before function
+		this->InsertFirst(no);
 	}
 	else if(pos == this->iCount+1)
 	{
@@ -185,9 +190,7 @@ void SinglyLL<T>::InsertAtPos(T no, int pos)
 	}
 	else
 	{
-		newn = new node<T>;
-		newn->data = no;
-		newn->next = NULL;
+		newn = new SinglyLLLnode<T>(no);
 
 		temp = this->first;
 
@@ -204,10 +207,10 @@ void SinglyLL<T>::InsertAtPos(T no, int pos)
 }
 
 template <class T>
-void SinglyLL<T>::DeleteAtPos(int pos)
+void SinglyLLL<T>::DeleteAtPos(int pos)
 {
-	node<T>* temp = NULL;
-	node<T>* target = NULL;
+	SinglyLLLnode<T> * temp = NULL;
+	SinglyLLLnode<T> * target = NULL;
 
 	int iCnt = 0;
 
@@ -229,6 +232,7 @@ void SinglyLL<T>::DeleteAtPos(int pos)
 	{
 		temp = this->first;
 
+
 		for(iCnt = 1; iCnt < pos - 1; iCnt++)
 		{
 			temp = temp->next;
@@ -239,66 +243,68 @@ void SinglyLL<T>::DeleteAtPos(int pos)
 		
 		delete target;
 
-		this->iCount--;	// important
+		this->iCount--;
 	}
 }
 
 int main()
 {
-	SinglyLL<int> obj;
+	SinglyLLL<int> *obj = new SinglyLLL<int>();
 	int iRet = 0;
 
-	obj.InsertFirst(51);
-	obj.InsertFirst(21);
-	obj.InsertFirst(11);
+	obj->InsertFirst(51);
+	obj->InsertFirst(21);
+	obj->InsertFirst(11);
 
-	obj.Display();
+	obj->Display();
 
-	iRet = obj.Count();
-
-	cout<<"Number of nodes are "<<iRet<<"\n";
-
-	obj.InsertLast(101);
-	obj.InsertLast(111);
-	obj.InsertLast(121);
-
-	obj.Display();
-
-	iRet = obj.Count();
+	iRet = obj->Count();
 
 	cout<<"Number of nodes are "<<iRet<<"\n";
 
-	obj.DeleteFirst();
+	obj->InsertLast(101);
+	obj->InsertLast(111);
+	obj->InsertLast(121);
 
-	obj.Display();
+	obj->Display();
 
-	iRet = obj.Count();
-
-	cout<<"Number of nodes are "<<iRet<<"\n";
-
-	obj.DeleteLast();
-
-	obj.Display();
-
-	iRet = obj.Count();
+	iRet = obj->Count();
 
 	cout<<"Number of nodes are "<<iRet<<"\n";
 
-	obj.InsertAtPos(105, 4);
+	obj->DeleteFirst();
 
-	obj.Display();
+	obj->Display();
 
-	iRet = obj.Count();
+	iRet = obj->Count();
+
+	cout<<"Number of nodes are "<<iRet<<"\n";
+
+	obj->DeleteLast();
+
+	obj->Display();
+
+	iRet = obj->Count();
 
 	cout<<"Number of nodes are "<<iRet<<"\n";
 
-	obj.DeleteAtPos(4);
+	obj->InsertAtPos(105, 4);
 
-	obj.Display();
+	obj->Display();
 
-	iRet = obj.Count();
+	iRet = obj->Count();
 
 	cout<<"Number of nodes are "<<iRet<<"\n";
+
+	obj->DeleteAtPos(4);
+
+	obj->Display();
+
+	iRet = obj->Count();
+
+	cout<<"Number of nodes are "<<iRet<<"\n";
+
+	delete obj;
 
 	return 0;
 }
